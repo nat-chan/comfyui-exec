@@ -3,7 +3,7 @@ import { app } from "../../scripts/app.js";
 app.registerExtension({
   name: "comfyui-eval",
   async beforeRegisterNodeDef(nodeType, nodeData, app) {
-    if (nodeData.name === "EvalNode") {
+    if (nodeData.name === "ExecCodeRunner" || nodeData.name === "ExecResultRetriever") {
       const origOnNodeCreated = nodeType.prototype.onNodeCreated;
       nodeType.prototype.onNodeCreated = function () {
         const r = origOnNodeCreated ? origOnNodeCreated.apply(this) : undefined;
@@ -18,8 +18,8 @@ app.registerExtension({
         }
         return r;
       }
-      nodeType.prototype.color = LGraphCanvas.node_colors.green.color;
-      nodeType.prototype.bgcolor = LGraphCanvas.node_colors.green.bgcolor;
+      nodeType.prototype.color = LGraphCanvas.node_colors.yellow.color;
+      nodeType.prototype.bgcolor = LGraphCanvas.node_colors.yellow.bgcolor;
     }
   },
 });

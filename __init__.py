@@ -27,7 +27,6 @@ class CustomNodeMeta(ABCMeta):
         attrs: dict,
     ) -> "CustomNodeMeta":
         global NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
-
         new_class = super().__new__(
             cls,
             name,
@@ -35,11 +34,11 @@ class CustomNodeMeta(ABCMeta):
             attrs
             | {
                 "FUNCTION": "run",
-                "CATEGORY": "Eval",
+                "CATEGORY": "Exec" + "⚠️",
             },
         )
         NODE_CLASS_MAPPINGS[name] = new_class
-        NODE_DISPLAY_NAME_MAPPINGS[name] = format_class_name(name) + "💻"
+        NODE_DISPLAY_NAME_MAPPINGS[name] = format_class_name(name) + "⚠️"
         return new_class
 
 
@@ -50,10 +49,10 @@ any = AnyType("*")
 
 N = 5
 
-class EvalNode(metaclass=CustomNodeMeta):
+class ExecCodeRunner(metaclass=CustomNodeMeta):
     OUTPUT_NODE = True
-    RETURN_TYPES = tuple([any]*N)
-    RETURN_NAMES = tuple([f"b{i}" for i in range(N)])
+    RETURN_TYPES = (any,)
+    RETURN_NAMES = ("DICT",)
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -66,15 +65,25 @@ class EvalNode(metaclass=CustomNodeMeta):
                 for i in range(N)
             }
         }
-    def run(
-        self,
-        code: str,
-        seed: int,
-        **kwargs,
-    ) -> tuple[str]:
-        kwargs.update({f"b{i}": None for i in range(N)})
-        exec(code, None, kwargs)
-        return tuple(kwargs.get(f"b{i}", None) for i in range(N))
+    def run(self, code: str, seed: int, **kwargs) -> tuple[dict]:
+        exec(code, {}, kwargs)
+        return (kwargs,)
+
+class ExecResultRetriever(metaclass=CustomNodeMeta):
+    OUTPUT_NODE = True
+    RETURN_TYPES = (any,)
+    RETURN_NAMES = ("*",)
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required" : {
+                "DICT" : ("*", {}),
+                "variable_name": ("STRING", {"multiline": False, "default": ""}),
+                "seed": ("INT:seed", {}),
+            }
+        }
+    def run(self, DICT: dict, variable_name: str, seed: int) -> tuple:
+        return (DICT[variable_name],)
 
 
 # --- node }}}
