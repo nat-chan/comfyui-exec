@@ -1,7 +1,7 @@
 import { app } from "../../scripts/app.js";
 
 app.registerExtension({
-  name: "comfyui-eval",
+  name: "comfyui-exec",
   async beforeRegisterNodeDef(nodeType, nodeData, app) {
     if (nodeData.name === "ExecCodeRunner" || nodeData.name === "ExecResultRetriever") {
       const origOnNodeCreated = nodeType.prototype.onNodeCreated;
@@ -18,8 +18,19 @@ app.registerExtension({
         }
         return r;
       }
-      nodeType.prototype.color = LGraphCanvas.node_colors.yellow.color;
-      nodeType.prototype.bgcolor = LGraphCanvas.node_colors.yellow.bgcolor;
+      nodeType.prototype.color = LGraphCanvas.node_colors.cyan.color;
+      nodeType.prototype.bgcolor = LGraphCanvas.node_colors.cyan.bgcolor;
+    }
+    if (nodeData.name === "ExecCodeRunner") {
+      nodeType.prototype.onConnectionsChange = function (type, index, connected, linkInfo, ioSlot) {
+        if (!linkInfo) return;
+        if (type !== 1) return;
+        if (connected) {
+          this.addInput("abcdefghijklmnopqrstuvwxyz"[this.inputs.length-1], "*");
+        } else {
+          this.removeInput(this.inputs.length-1);
+        }
+      }
     }
   },
 });

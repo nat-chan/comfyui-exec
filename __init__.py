@@ -51,19 +51,19 @@ N = 5
 
 class ExecCodeRunner(metaclass=CustomNodeMeta):
     OUTPUT_NODE = True
-    RETURN_TYPES = (any,)
-    RETURN_NAMES = ("DICT",)
+    RETURN_TYPES = ("EXEC_OUT",)
+    RETURN_NAMES = ("EXEC_OUT",)
     @classmethod
     def INPUT_TYPES(s):
         return {
             "required" : {
-                "code": ("STRING", {"multiline": True, "default": ""}),
+                "code": ("STRING", {"forceInput": True}),
                 "seed": ("INT:seed", {}),
             },
-            "optional" : {
-                f"a{i}" : ("*", {})
-                for i in range(N)
-            }
+#            "optional" : {
+#                f"a{i}" : ("*", {})
+#                for i in range(N)
+#            }
         }
     def run(self, code: str, seed: int, **kwargs) -> tuple[dict]:
         exec(code, {}, kwargs)
@@ -77,13 +77,13 @@ class ExecResultRetriever(metaclass=CustomNodeMeta):
     def INPUT_TYPES(s):
         return {
             "required" : {
-                "DICT" : ("*", {}),
+                "EXEC_OUT" : ("EXEC_OUT", {"forceInput": True}),
                 "variable_name": ("STRING", {"multiline": False, "default": ""}),
                 "seed": ("INT:seed", {}),
             }
         }
-    def run(self, DICT: dict, variable_name: str, seed: int) -> tuple:
-        return (DICT[variable_name],)
+    def run(self, EXEC_OUT: dict, variable_name: str, seed: int) -> tuple:
+        return (EXEC_OUT[variable_name],)
 
 
 # --- node }}}
