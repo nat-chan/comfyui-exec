@@ -1,4 +1,4 @@
-# comfyui-eval
+# comfyui-exec⚠️
 
-任意コード実行して任意型で出力するノード
-危ないので使わないでください。
+> [!WARNING]
+> This custom node has the danger of allowing users to execute arbitrary code, e.g. `rm -rf /`, on the server. It should not be used in a production environment.
