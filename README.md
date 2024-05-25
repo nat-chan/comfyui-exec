@@ -42,3 +42,7 @@ git clone https://github.com/nat-chan/comfyui-exec
 
 - `variable_name`
   - Describe the process in the CODE and fill in the name of the variable you want to retrieve. It can be connected to any type of node.
+
+## GIF
+
+![comfy-exec2](https://github.com/nat-chan/comfyui-exec/assets/18454066/40123b4c-8b34-40c2-ae72-e2d66070a30b)
