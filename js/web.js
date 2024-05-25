@@ -26,9 +26,15 @@ app.registerExtension({
         if (!linkInfo) return;
         if (type !== 1) return;
         if (connected) {
-          this.addInput("abcdefghijklmnopqrstuvwxyz"[this.inputs.length-1], "*");
+          const cnt = this.inputs.filter(input => input.link === null).length;
+          if (cnt < 1) {
+            this.addInput("abcdefghijklmnopqrstuvwxyz"[this.inputs.length-1], "*");
+          }
         } else {
-          this.removeInput(this.inputs.length-1);
+          const cnt = this.inputs.filter(input => input.link === null).length;
+          if (cnt > 1) {
+            this.removeInput(this.inputs.length-1);
+          }
         }
       }
     }
