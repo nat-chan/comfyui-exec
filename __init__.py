@@ -47,26 +47,20 @@ class AnyType(str):
         return False
 any = AnyType("*")
 
-N = 5
-
 class ExecCodeRunner(metaclass=CustomNodeMeta):
     OUTPUT_NODE = True
-    RETURN_TYPES = ("EXEC_OUT",)
-    RETURN_NAMES = ("EXEC_OUT",)
+    RETURN_TYPES = ("RESULT",)
+    RETURN_NAMES = ("RESULT",)
     @classmethod
     def INPUT_TYPES(s):
         return {
             "required" : {
-                "code": ("STRING", {"forceInput": True}),
+                "CODE": ("STRING", {"forceInput": True}),
                 "seed": ("INT:seed", {}),
             },
-#            "optional" : {
-#                f"a{i}" : ("*", {})
-#                for i in range(N)
-#            }
         }
-    def run(self, code: str, seed: int, **kwargs) -> tuple[dict]:
-        exec(code, {}, kwargs)
+    def run(self, CODE: str, seed: int, **kwargs) -> tuple[dict]:
+        exec(CODE, {}, kwargs)
         return (kwargs,)
 
 class ExecResultRetriever(metaclass=CustomNodeMeta):
@@ -77,13 +71,13 @@ class ExecResultRetriever(metaclass=CustomNodeMeta):
     def INPUT_TYPES(s):
         return {
             "required" : {
-                "EXEC_OUT" : ("EXEC_OUT", {"forceInput": True}),
-                "variable_name": ("STRING", {"multiline": False, "default": ""}),
+                "RESULT" : ("RESULT", {"forceInput": True}),
+                "variable_name": ("STRING", {"multiline": False, "default": "z"}),
                 "seed": ("INT:seed", {}),
             }
         }
-    def run(self, EXEC_OUT: dict, variable_name: str, seed: int) -> tuple:
-        return (EXEC_OUT[variable_name],)
+    def run(self, RESULT: dict, variable_name: str, seed: int) -> tuple:
+        return (RESULT[variable_name],)
 
 
 # --- node }}}
