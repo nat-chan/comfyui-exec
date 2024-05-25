@@ -1,5 +1,7 @@
 # comfyui-exec⚠️
 
+![image](https://github.com/nat-chan/comfyui-exec/assets/18454066/3daed333-12a3-4c7f-a359-a1918005f877)
+
 > [!WARNING]
 > This custom node has the danger of allowing users to execute arbitrary code, e.g. `rm -rf /`, on the server. It should not be used in a production environment.
 
