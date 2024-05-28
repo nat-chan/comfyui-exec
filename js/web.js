@@ -3,7 +3,11 @@ import { app } from "../../scripts/app.js";
 app.registerExtension({
   name: "comfyui-exec",
   async beforeRegisterNodeDef(nodeType, nodeData, app) {
-    if (nodeData.name === "ExecCodeRunner" || nodeData.name === "ExecResultRetriever") {
+    if (
+        nodeData.name === "ExecCodeRunner" || 
+        nodeData.name === "ExecResultRetriever" ||
+        nodeData.name === "ExecCodeReader"
+      ) {
       const origOnNodeCreated = nodeType.prototype.onNodeCreated;
       nodeType.prototype.onNodeCreated = function () {
         const r = origOnNodeCreated ? origOnNodeCreated.apply(this) : undefined;

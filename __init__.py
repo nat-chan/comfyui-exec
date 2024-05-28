@@ -1,5 +1,6 @@
 import re
 from abc import ABCMeta
+from pathlib import Path
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
@@ -78,6 +79,23 @@ class ExecResultRetriever(metaclass=CustomNodeMeta):
         }
     def run(self, RESULT: dict, variable_name: str, seed: int) -> tuple:
         return (RESULT[variable_name],)
+
+class ExecCodeReader(metaclass=CustomNodeMeta):
+    OUTPUT_NODE = True
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("CODE",)
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required" : {
+                "file_path": ("STRING", {"multiline": False, "default": "~/code.py"}),
+                "seed": ("INT:seed", {}),
+            }
+        }
+    def run(self, file_path: str, seed: int) -> tuple:
+        p = Path(file_path).expanduser()
+        txt = p.read_text()
+        return (txt,)
 
 
 # --- node }}}
